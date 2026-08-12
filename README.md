@@ -5,7 +5,7 @@ Personal macOS dotfiles, managed as a set of symlinks into `~/.config` (XDG Base
 ## Setup
 
 ```bash
-git clone git@github.com:ryo-ml/dotfiles.git ~/dotfiles && ~/dotfiles/install.sh --no-backup
+git clone https://github.com/ryo-ml/dotfiles.git ~/dotfiles && ~/dotfiles/install.sh --no-backup
 ```
 
 `--no-backup` is fine for a fresh machine (there's nothing at the destinations to lose yet).
