@@ -5,7 +5,7 @@ Personal macOS dotfiles, managed as a set of symlinks into `~/.config` (XDG Base
 ## Setup
 
 ```bash
-git clone <repo> ~/dotfiles && ~/dotfiles/install.sh --no-backup
+git clone git@github.com:ryo-ml/dotfiles.git ~/dotfiles && ~/dotfiles/install.sh --no-backup
 ```
 
 `--no-backup` is fine for a fresh machine (there's nothing at the destinations to lose yet).
@@ -14,8 +14,8 @@ Migrating an existing machine with real configs already in place? Drop the flag 
 
 Then fill in the machine-specific bits `install.sh` created empty placeholders for:
 
-- [ ] `~/.config/git/config.local` — set `name` / `email`
-- [ ] `~/.zsh.local` — add any machine-specific env vars / secrets
+- `~/.config/git/config.local` — set `name` / `email`
+- `~/.zsh.local` — add any machine-specific env vars / secrets
 
 Reload the shell to pick up `ZDOTDIR` and everything under it:
 
