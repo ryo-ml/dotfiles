@@ -1,0 +1,31 @@
+# 1. Ignore everything by default
+*
+
+# 2. Allow traversal into directories (needed so files below can be un-ignored)
+!*/
+
+# 3. Explicitly allow only the files that should be tracked
+# repo meta
+!/.gitignore
+!/README.md
+!/install.sh
+
+# zsh bootstrap (must live at $HOME, read before ZDOTDIR is set)
+!/.zshenv
+
+# git
+!/.config/git/config
+
+# nvim
+!/.config/nvim/init.lua
+!/.config/nvim/lazy-lock.json
+!/.config/nvim/README.md
+!/.config/nvim/lua/**/*.lua
+
+# tmux
+!/.config/tmux/tmux.conf
+
+# zsh
+!/.config/zsh/.zshrc
+!/.config/zsh/README.md
+!/.config/zsh/conf.d/*.zsh
