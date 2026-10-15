@@ -19,11 +19,6 @@ export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
 export HOMEBREW_NO_AUTO_UPDATE=1
 
 
-# Flutter & Dart
-export PATH="$HOME/sdk/flutter/bin:$PATH"
-export PATH="$PATH:$HOME/.pub-cache/bin"
-
-
 # X11 display
 export DISPLAY=:0
 
