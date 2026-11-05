@@ -13,7 +13,7 @@ Personal macOS dotfiles, managed as symlinks into `~/.config` (XDG Base Director
 2. Clone and install
 
    ```bash
-   git clone https://github.com/ryo-ml/dotfiles.git ~/dotfiles && ~/dotfiles/install.sh --no-backup
+   git clone https://github.com/ryo-ml/dotfiles.git ~/dotfiles && ~/dotfiles/install.sh
    ```
 
 3. Fill in `~/.dotfiles-local/gitconfig` and `~/.dotfiles-local/zshrc`
@@ -30,8 +30,8 @@ See [Setup notes](#setup-notes) for details on each step.
 
 - **Step 1** — Skip it if `echo $SHELL` already shows zsh (the macOS default). It's a
   one-time system change and may ask for your password, so `install.sh` doesn't do it.
-- **Step 2** — `--no-backup` is for a fresh machine. On a machine with existing configs,
-  drop it so conflicting files are backed up (see [What `install.sh` does](#what-installsh-does)).
+- **Step 2** — Safe on a machine with existing configs too: anything in the way is moved to
+  `~/.dotfiles-backup/` first (see [What `install.sh` does](#what-installsh-does)).
 - **Step 3** — `gitconfig` takes your `[user] name` / `email`; `zshrc` takes machine-specific
   env vars and secrets (see [Local overrides](#local-overrides-not-tracked)).
 
@@ -53,7 +53,8 @@ dotfiles/
 - Symlinks `.zshenv` and each `.config/*` directory. Safe to re-run: correct links are
   kept, stale links are replaced.
 - If a real file already exists at a destination: identical → removed; different → moved
-  to `<destination>.backup` (or discarded with `--no-backup`).
+  to `~/.dotfiles-backup/<YYYYmmdd-HHMMSS>/<same path>` (mode `700`, one directory per run,
+  never overwritten).
 - Creates `~/.dotfiles-local/` (mode `700`) with empty placeholders (mode `600`). Never
   overwrites existing files.
 - Creates `~/.ssh/config.d/`, `~/.ssh/keys/` and, if missing, a `~/.ssh/config` that just

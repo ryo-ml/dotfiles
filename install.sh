@@ -3,13 +3,19 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-no_backup=false
-[[ "${1:-}" == "--no-backup" ]] && no_backup=true
+if (( $# > 0 )); then
+    echo "usage: $0  (takes no options)" >&2
+    exit 1
+fi
+
+# Conflicting files are moved into one timestamped directory per run, keeping
+# their path relative to $HOME. Created only if something needs backing up.
+backup_root="$HOME/.dotfiles-backup"
+backup_dir="$backup_root/$(date +%Y%m%d-%H%M%S)"
 
 # Symlink $1 -> $2. A stale symlink at the destination is just removed (it
-# holds no data of its own). A real file/directory is backed up first, unless
-# it's already identical to $1 (nothing to lose) or --no-backup was passed.
-# The backup path is overwritten.
+# holds no data of its own). A real file/directory is removed if identical to
+# $1 (nothing to lose), otherwise moved into $backup_dir.
 link() {
     local src="$1" dst="$2"
 
@@ -21,13 +27,15 @@ link() {
     if [[ -L "$dst" ]]; then
         rm "$dst"
     elif [[ -e "$dst" ]]; then
-        if $no_backup || diff -rq "$src" "$dst" > /dev/null 2>&1; then
+        if diff -rq "$src" "$dst" > /dev/null 2>&1; then
             rm -rf "$dst"
         else
-            local backup="${dst}.backup"
-            echo "BACKUP  $dst -> $backup"
-            rm -rf "$backup"
+            # Private: old configs may contain secrets.
+            local backup="$backup_dir/${dst#"$HOME"/}"
+            (umask 077; mkdir -p "$(dirname "$backup")")
+            chmod 700 "$backup_root"
             mv "$dst" "$backup"
+            echo "BACKUP  $dst -> $backup"
         fi
     fi
 
