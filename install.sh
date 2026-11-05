@@ -56,10 +56,17 @@ touch_if_missing() {
     fi
 }
 
-# Local override placeholders — machine-specific/secret, kept outside the
-# dotfiles tree entirely (see README "Local overrides"). Only created if
-# missing; existing content (e.g. a real git identity) is left untouched.
-touch_if_missing "$HOME/.zsh.local" $'# Machine-specific env vars / secrets.\n'
-touch_if_missing "$HOME/.config/git/config.local" $'[user]\n#\tname = \n#\temail = \n'
+# Local override placeholders — machine-specific/secret, kept in
+# ~/.dotfiles-local, outside the repo (see README "Local overrides"). Only
+# created if missing; existing content (e.g. a real git identity) is left
+# untouched. Private to the user since it may hold secrets.
+local_dir="$HOME/.dotfiles-local"
+mkdir -p "$local_dir"
+chmod 700 "$local_dir"
+(
+    umask 077
+    touch_if_missing "$local_dir/zshrc" $'# Machine-specific env vars / secrets.\n'
+    touch_if_missing "$local_dir/gitconfig" $'[user]\n#\tname = \n#\temail = \n'
+)
 
 echo "Done."

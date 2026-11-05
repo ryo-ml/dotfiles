@@ -21,9 +21,9 @@ Built for a clean, maintainable, and scalable shell environment.
     └── 40_prompt.zsh
 ```
 
-`~/.zsh.local` (outside this directory, on purpose) is sourced by `.zshrc` if present — see
-the root [README](../../README.md#local-overrides-not-tracked) for why it lives at `$HOME`
-instead of here.
+`~/.dotfiles-local/zshrc` (outside this directory, on purpose) is sourced by `.zshrc` if
+present — see the root [README](../../README.md#local-overrides-not-tracked) for why it
+lives outside the repo instead of here.
 
 ---
 

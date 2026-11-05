@@ -14,8 +14,8 @@ Migrating an existing machine with real configs already in place? Drop the flag 
 
 Then fill in the machine-specific bits `install.sh` created empty placeholders for:
 
-- `~/.config/git/config.local` — set `name` / `email`
-- `~/.zsh.local` — add any machine-specific env vars / secrets
+- `~/.dotfiles-local/gitconfig` — set `name` / `email`
+- `~/.dotfiles-local/zshrc` — add any machine-specific env vars / secrets
 
 Reload the shell to pick up `ZDOTDIR` and everything under it:
 
@@ -59,25 +59,24 @@ exception: zsh reads it from `$HOME` before `ZDOTDIR` is even set, so it can't l
   - identical to what's in the repo → removed, no backup needed
   - different → moved to `<destination>.backup` first (overwriting any previous backup
     there), unless `--no-backup` was passed, in which case it's just discarded
-- Creates empty placeholders for the [local override](#local-overrides-not-tracked) files
-  if they don't exist yet — never overwrites existing ones.
+- Creates `~/.dotfiles-local/` (mode `700`) with empty placeholders for the
+  [local override](#local-overrides-not-tracked) files (mode `600`) if they don't exist
+  yet — never overwrites existing ones.
 
 ## Local overrides (not tracked)
 
-Some files hold machine-specific or secret values and are kept out of version control.
-Two different mechanisms are used depending on how sensitive the content is:
+Machine-specific or secret values live in `~/.dotfiles-local/`, a plain directory outside
+the repo (not a symlink, not tracked):
 
-| File                        | Mechanism                                            | Purpose                                        |
-| ---------------------------- | ------------------------------------------------------ | ------------------------------------------------- |
-| `~/.zsh.local`               | lives entirely outside `~/dotfiles`, sourced by `.zshrc` if present | env vars / API keys / anything sensitive |
-| `.config/git/config.local`   | inside the repo but excluded via the whitelist `.gitignore`, included by `.config/git/config` | `[user] name`/`email` |
+```
+~/.dotfiles-local/
+├── zshrc        # sourced at the end of .zshrc, if present — env vars / API keys / secrets
+└── gitconfig    # included by .config/git/config — [user] name / email
+```
 
-`git/config.local` only ever holds low-stakes identity info (it's published in every commit's
-metadata anyway), so keeping it gitignored-but-physically-in-the-repo is fine. Anything with
-real secret value (API tokens, credentials) belongs in `~/.zsh.local` instead — a plain
-`.gitignore` entry only stops `git push`, it doesn't stop other tools (editors, AI agents,
-backups, sync) that read the whole `~/dotfiles` folder from seeing the file. Living outside
-the repo avoids that entirely.
+Keeping these outside `~/dotfiles` (rather than gitignored inside it) matters for secrets:
+a `.gitignore` entry only stops `git push`, it doesn't stop other tools (editors, AI agents,
+backups, sync) that read the whole `~/dotfiles` folder from seeing the file.
 
 ## What's tracked
 
