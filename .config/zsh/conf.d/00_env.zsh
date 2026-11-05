@@ -1,28 +1,35 @@
-# Homebrew
-[[ -d /opt/homebrew ]] || return 0  # Run only on Apple Silicon
+# Homebrew (Apple Silicon macOS, or Homebrew on Linux) — skipped if neither exists
+for _brew_prefix in /opt/homebrew /home/linuxbrew/.linuxbrew; do
+    [[ -d $_brew_prefix ]] || continue
 
-export HOMEBREW_PREFIX="/opt/homebrew"
-export HOMEBREW_CELLAR="/opt/homebrew/Cellar"
-export HOMEBREW_REPOSITORY="/opt/homebrew"
+    export HOMEBREW_PREFIX="$_brew_prefix"
+    export HOMEBREW_CELLAR="$_brew_prefix/Cellar"
+    if [[ -d $_brew_prefix/Homebrew ]]; then  # Linux keeps the repo in a subdirectory
+        export HOMEBREW_REPOSITORY="$_brew_prefix/Homebrew"
+    else
+        export HOMEBREW_REPOSITORY="$_brew_prefix"
+    fi
 
-typeset -U path
-[[ -d /opt/homebrew/bin  ]] && path=(/opt/homebrew/bin  $path)
-[[ -d /opt/homebrew/sbin ]] && path=(/opt/homebrew/sbin $path)
+    typeset -U path
+    [[ -d $_brew_prefix/bin  ]] && path=("$_brew_prefix/bin"  $path)
+    [[ -d $_brew_prefix/sbin ]] && path=("$_brew_prefix/sbin" $path)
 
-typeset -U fpath
-[[ -d /opt/homebrew/share/zsh/site-functions ]] \
-    && fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+    typeset -U fpath
+    [[ -d $_brew_prefix/share/zsh/site-functions ]] \
+        && fpath=("$_brew_prefix/share/zsh/site-functions" $fpath)
 
-export MANPATH="/opt/homebrew/share/man${MANPATH:+:${MANPATH}}:"
-export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
+    export MANPATH="$_brew_prefix/share/man${MANPATH:+:${MANPATH}}:"
+    export INFOPATH="$_brew_prefix/share/info:${INFOPATH:-}"
 
-export HOMEBREW_NO_AUTO_UPDATE=1
+    export HOMEBREW_NO_AUTO_UPDATE=1
+    break
+done
+unset _brew_prefix
 
 
-# X11 display
-export DISPLAY=:0
+# X11 display (macOS / XQuartz). Not set on Linux, where ssh -X provides it.
+[[ $OSTYPE == darwin* ]] && export DISPLAY="${DISPLAY:-:0}"
 
 
 # Conda PS1 control
 export CONDA_CHANGEPS1=false
-

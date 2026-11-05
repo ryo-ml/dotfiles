@@ -20,18 +20,30 @@ if [ -s "$NVM_DIR/nvm.sh" ]; then
     pnpm() { _lazy_load_nvm && pnpm "$@"; }
 fi
 
-# conda
-if [ -f "/opt/anaconda3/bin/conda" ]; then
+# conda (first install found; system-wide on macOS, usually under $HOME on Linux)
+_conda_root=
+for _dir in /opt/anaconda3 /opt/miniconda3 \
+            "$HOME/anaconda3" "$HOME/miniconda3" "$HOME/miniforge3"; do
+    if [[ -x $_dir/bin/conda ]]; then
+        _conda_root="$_dir"
+        break
+    fi
+done
+unset _dir
+
+if [[ -n $_conda_root ]]; then
     _load_conda() {
         # Remove wrapper function
         unset -f conda 2>/dev/null
         # Early return if conda fails to load
-        eval "$('/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)" || {
+        eval "$("$_conda_root/bin/conda" shell.zsh hook 2>/dev/null)" || {
             echo "[conda] Failed to load conda" >&2
             return 1
         }
     }
     conda() { _load_conda && conda "$@"; }
+else
+    unset _conda_root
 fi
 
 # uv

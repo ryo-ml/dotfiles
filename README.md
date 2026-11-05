@@ -1,6 +1,7 @@
 # dotfiles
 
-Personal macOS dotfiles, managed as symlinks into `~/.config` (XDG Base Directory) and `$HOME`.
+Personal dotfiles for macOS and Linux servers, managed as symlinks into `~/.config`
+(XDG Base Directory) and `$HOME`.
 
 ## Setup
 
