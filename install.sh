@@ -69,4 +69,14 @@ chmod 700 "$local_dir"
     touch_if_missing "$local_dir/gitconfig" $'[user]\n#\tname = \n#\temail = \n'
 )
 
+# SSH skeleton — ~/.ssh stays a real directory. Keys, host configs and
+# known_hosts are machine-specific: never tracked, never modified (only their
+# permissions are normalized).
+ssh_dir="$HOME/.ssh"
+mkdir -p "$ssh_dir/config.d" "$ssh_dir/keys"
+touch_if_missing "$ssh_dir/config" $'Include config.d/*.conf\n'
+find "$ssh_dir" -type d -exec chmod 700 {} +
+find "$ssh_dir" -type f ! -name '*.pub' -exec chmod 600 {} +
+find "$ssh_dir" -type f -name '*.pub' -exec chmod 644 {} +
+
 echo "Done."

@@ -56,6 +56,9 @@ dotfiles/
   to `<destination>.backup` (or discarded with `--no-backup`).
 - Creates `~/.dotfiles-local/` (mode `700`) with empty placeholders (mode `600`). Never
   overwrites existing files.
+- Creates `~/.ssh/config.d/`, `~/.ssh/keys/` and, if missing, a `~/.ssh/config` that just
+  includes `config.d/*.conf`. Then normalizes permissions under `~/.ssh`: directories `700`,
+  files `600`, `*.pub` `644`. Keys and host configs are never tracked or modified.
 
 ## Local overrides (not tracked)
 
