@@ -19,8 +19,8 @@ if (( $+commands[uvx] )); then
     eval "$(uvx --generate-shell-completion zsh)"
 fi
 
-# npm completion. The lazy nvm wrappers (10_runtime.zsh) hide the real npm
-# until first use, so load nvm on first Tab.
+# npm / nvm completion. The lazy nvm wrappers (10_runtime.zsh) hide the real
+# npm and nvm's helper functions until first use, so load nvm on first Tab.
 if (( $+functions[_lazy_load_nvm] )); then
     _ensure_nvm_loaded() {
         (( $+functions[nvm_ls] )) && return
@@ -29,12 +29,31 @@ if (( $+functions[_lazy_load_nvm] )); then
         () { local -h PREFIX; unset PREFIX; _lazy_load_nvm; } >/dev/null 2>&1
     }
 
-    # zsh's bundled _npm requires the real npm on PATH
+    # Load npm's own completion script on first Tab. With bashcompinit (below)
+    # it registers itself via `complete`, so call whatever it registered.
     _npm_lazy() {
         _ensure_nvm_loaded
-        _npm "$@"
+        (( $+commands[npm] )) || return 1
+        eval "$(NPM_CONFIG_UPDATE_NOTIFIER=false npm completion)"
+        functions[_npm_completion]="
+            local -x NPM_CONFIG_UPDATE_NOTIFIER=false
+            ${functions[_npm_completion]}"
+        ${=_comps[npm]} "$@"
     }
     compdef _npm_lazy npm
+
+    # nvm ships a bash completion script; run it through bashcompinit
+    if [[ -s "$NVM_DIR/bash_completion" ]]; then
+        autoload -Uz bashcompinit && bashcompinit
+        source "$NVM_DIR/bash_completion"
+        # `complete` registered e.g. "_bash_complete -o default -F __nvm"
+        _nvm_bash_completer=${_comps[nvm]}
+        _nvm_lazy() {
+            _ensure_nvm_loaded
+            ${=_nvm_bash_completer} "$@"
+        }
+        compdef _nvm_lazy nvm
+    fi
 fi
 
 # Set zcompcache location to XDG cache directory
