@@ -1,0 +1,21 @@
+use File::Basename;
+
+# 1. Compiler: LuaLaTeX (handles both Japanese and English)
+$pdf_mode = 4;
+$lualatex = 'lualatex -interaction=nonstopmode -synctex=1 %O %S';
+
+# 2. Output directories, derived from the target file
+# The first argument may be an option (e.g. -c), so take the directory from the last one
+my $target = $ARGV[-1];
+my $tex_dir = dirname($target);
+
+$aux_dir = "$tex_dir/_aux";
+$out_dir = "$tex_dir/pdf";
+
+# 3. Create the directories if missing
+mkdir $aux_dir unless -d $aux_dir;
+mkdir $out_dir unless -d $out_dir;
+
+# 4. Cleanup
+push @generated_exts, 'bcf', 'run.xml', 'synctex.gz';
+@clean_ext = ('aux', 'bbl', 'bcf', 'blg', 'brf', 'log', 'nav', 'out', 'run.xml', 'snm', 'toc', 'fdb_latexmk', 'fls', 'plt');
