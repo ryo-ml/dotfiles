@@ -4,17 +4,21 @@ use File::Basename;
 $pdf_mode = 4;
 $lualatex = 'lualatex -interaction=nonstopmode -synctex=1 %O %S';
 
-# 2. Output directories, derived from the target file
-# The first argument may be an option (e.g. -c), so take the directory from the last one
-my $target = $ARGV[-1];
-my $tex_dir = dirname($target);
+# 2. Put aux files in <tex dir>/_aux and the PDF in <tex dir>/pdf.
+# The target is the last non-option argument naming an existing .tex file,
+# with or without the extension (VS Code's LaTeX Workshop omits it). With no
+# such argument (e.g. `latexmk -c`), latexmk's defaults apply instead of
+# creating _aux/ and pdf/ in the current directory.
+my ($target) = grep { !/^-/ && (-f $_ || -f "$_.tex") } reverse @ARGV;
+if (defined $target) {
+    my $tex_dir = dirname($target);
+    $aux_dir = "$tex_dir/_aux";
+    $out_dir = "$tex_dir/pdf";
 
-$aux_dir = "$tex_dir/_aux";
-$out_dir = "$tex_dir/pdf";
-
-# 3. Create the directories if missing
-mkdir $aux_dir unless -d $aux_dir;
-mkdir $out_dir unless -d $out_dir;
+    # 3. Create the directories if missing
+    mkdir $aux_dir unless -d $aux_dir;
+    mkdir $out_dir unless -d $out_dir;
+}
 
 # 4. Cleanup
 push @generated_exts, 'bcf', 'run.xml', 'synctex.gz';
