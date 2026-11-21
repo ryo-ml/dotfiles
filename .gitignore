@@ -13,6 +13,9 @@
 # zsh bootstrap (must live at $HOME, read before ZDOTDIR is set)
 !/.zshenv
 
+# claude code (only the config — ~/.claude is otherwise runtime state)
+!/.claude/settings.json
+
 # git
 !/.config/git/config
 

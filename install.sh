@@ -55,6 +55,10 @@ for src in "$DOTFILES_DIR"/.config/*/; do
     link "${src%/}" "$HOME/.config/$name"
 done
 
+# Claude Code — ~/.claude stays a real directory: it is mostly runtime state
+# (history, sessions, caches, synced skills). Only config files are linked.
+link "$DOTFILES_DIR/.claude/settings.json" "$HOME/.claude/settings.json"
+
 # Create $1 with content $2 only if nothing exists there yet. Never overwrites.
 touch_if_missing() {
     local path="$1" content="$2"

@@ -42,6 +42,8 @@ See [Setup notes](#setup-notes) for details on each step.
 dotfiles/
 ├── install.sh       # symlinks everything below into place
 ├── .zshenv          # → ~/.zshenv (zsh reads it before ZDOTDIR is set)
+├── .claude/
+│   └── settings.json  # → ~/.claude/settings.json (rest of ~/.claude is runtime state)
 └── .config/         # each directory → ~/.config/<name>
     ├── git/         # global config; identity lives in ~/.dotfiles-local
     ├── nvim/        # Lua config on lazy.nvim — see .config/nvim/README.md
@@ -51,8 +53,8 @@ dotfiles/
 
 ## What `install.sh` does
 
-- Symlinks `.zshenv` and each `.config/*` directory. Safe to re-run: correct links are
-  kept, stale links are replaced.
+- Symlinks `.zshenv`, `.claude/settings.json` and each `.config/*` directory. Safe to
+  re-run: correct links are kept, stale links are replaced.
 - If a real file already exists at a destination: identical → removed; different → moved
   to `~/.dotfiles-backup/<YYYYmmdd-HHMMSS>/<same path>` (mode `700`, one directory per run,
   never overwritten).
