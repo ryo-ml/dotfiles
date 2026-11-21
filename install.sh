@@ -48,6 +48,10 @@ link() {
 # so it can't be part of the .config/* loop below.
 link "$DOTFILES_DIR/.zshenv" "$HOME/.zshenv"
 
+# Plain vim for machines without nvim. ~/.vimrc rather than ~/.config/vim:
+# XDG paths need vim 9.1+, which many servers don't have yet.
+link "$DOTFILES_DIR/.vimrc" "$HOME/.vimrc"
+
 # Everything under .config/ maps 1:1 onto ~/.config/*.
 mkdir -p "$HOME/.config"
 for src in "$DOTFILES_DIR"/.config/*/; do

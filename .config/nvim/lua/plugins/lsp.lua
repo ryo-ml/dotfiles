@@ -1,20 +1,20 @@
 return {
   -- Mason: Portable package manager for LSP servers and tools
   {
-    "williamboman/mason.nvim",
-    cmd = "Mason",
+    "mason-org/mason.nvim",
     build = ":MasonUpdate",
-    opts = {
-      ensure_installed = {
-        "lua-language-server",
-        "stylua",
-      },
-    },
+    opts = {},
   },
 
-  -- Mason-lspconfig: Automatic installation bridge
+  -- Mason-lspconfig: installs the servers below and enables every installed
+  -- server automatically (`automatic_enable`, on by default)
   {
-    "williamboman/mason-lspconfig.nvim",
+    "mason-org/mason-lspconfig.nvim",
+    event = { "BufReadPre", "BufNewFile" },
+    dependencies = {
+      "mason-org/mason.nvim",
+      "neovim/nvim-lspconfig", -- default configs for each server
+    },
     opts = {
       ensure_installed = {
         "lua_ls",
@@ -28,15 +28,12 @@ return {
         "taplo",
       },
     },
-  },
-
-  -- nvim-lspconfig: Modern Neovim 0.11+ configuration
-  {
-    "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
-    config = function()
-      -- Configure Lua server with Neovim globals
-      vim.lsp.enable("lua_ls", {
+    config = function(_, opts)
+      -- Server settings must be registered before servers get enabled
+      vim.lsp.config("*", {
+        capabilities = require("cmp_nvim_lsp").default_capabilities(),
+      })
+      vim.lsp.config("lua_ls", {
         settings = {
           Lua = {
             diagnostics = { globals = { "vim" } },
@@ -45,22 +42,7 @@ return {
         },
       })
 
-      -- List of language servers to enable
-      local servers = { 
-        "pyright", 
-        "rust_analyzer", 
-        "clangd", 
-        "ts_ls", 
-        "html", 
-        "cssls", 
-        "yamlls", 
-        "taplo" 
-      }
-      
-      -- Enable servers using protected call to avoid errors if binary is missing
-      for _, server in ipairs(servers) do
-        pcall(vim.lsp.enable, server)
-      end
+      require("mason-lspconfig").setup(opts)
     end,
   },
 

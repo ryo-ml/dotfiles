@@ -13,6 +13,9 @@
 # zsh bootstrap (must live at $HOME, read before ZDOTDIR is set)
 !/.zshenv
 
+# vim (plain-vim fallback for servers; ~/.vimrc works on every vim version)
+!/.vimrc
+
 # claude code (only the config — ~/.claude is otherwise runtime state)
 !/.claude/settings.json
 
