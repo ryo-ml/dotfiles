@@ -8,10 +8,9 @@ return {
 
       autopairs.setup({
         check_ts = true, -- Enable Treesitter integration
-        disable_filetype = { "TelescopePrompt", "spectre_panel" },
       })
 
-      -- If you want to integrate with nvim-cmp (confirming with Enter also closes pairs)
+      -- Add the closing bracket when a function is confirmed in nvim-cmp
       local cmp_autopairs = require("nvim-autopairs.completion.cmp")
       local cmp = require("cmp")
       cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())

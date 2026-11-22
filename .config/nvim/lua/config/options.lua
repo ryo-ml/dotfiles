@@ -1,5 +1,3 @@
--- lua/config/options.lua
-
 -- Clipboard synchronization
 vim.opt.clipboard = "unnamedplus" -- Sync with system clipboard
 
