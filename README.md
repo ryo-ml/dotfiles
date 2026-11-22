@@ -46,7 +46,7 @@ dotfiles/
 ├── .claude/
 │   └── settings.json  # → ~/.claude/settings.json (rest of ~/.claude is runtime state)
 └── .config/         # each directory → ~/.config/<name>
-    ├── git/         # global config; identity lives in ~/.dotfiles-local
+    ├── git/         # global config + ignore; identity lives in ~/.dotfiles-local
     ├── latexmk/     # latexmkrc (LuaLaTeX, aux/PDF next to the .tex file)
     ├── nvim/        # Lua config on lazy.nvim — see .config/nvim/README.md
     ├── tmux/        # tmux.conf

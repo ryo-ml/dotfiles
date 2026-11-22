@@ -1,0 +1,4 @@
+# Global gitignore: only files from my own environment.
+# Project files (build output, .env, ...) go in each repo's .gitignore.
+
+.DS_Store

@@ -21,6 +21,7 @@
 
 # git
 !/.config/git/config
+!/.config/git/ignore
 
 # latexmk
 !/.config/latexmk/latexmkrc
