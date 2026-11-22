@@ -1,71 +1,23 @@
-# Zsh Configuration
-
-A modular Zsh setup organized under `~/.config/zsh`.
-
-Built for a clean, maintainable, and scalable shell environment.
-
----
-
-# Structure
+# Zsh
 
 ```text
-~/.config/zsh
-├── .zshrc
-├── README.md
-└── conf.d
-    ├── 00_env.zsh
-    ├── 01_history.zsh
-    ├── 10_runtime.zsh
+~/.config/zsh/
+├── .zshrc               # sources conf.d/*.zsh in lexical order, then the local override
+└── conf.d/
+    ├── 00_env.zsh       # Homebrew, PATH, env vars
+    ├── 01_history.zsh   # history file and options
+    ├── 10_runtime.zsh   # nvm, conda (both lazy-loaded), uv, rbenv
     ├── 20_completion.zsh
-    ├── 30_vim.zsh
+    ├── 30_vim.zsh       # vi mode, cursor shape per mode
     └── 40_prompt.zsh
 ```
 
-`~/.dotfiles-local/zshrc` (outside this directory, on purpose) is sourced by `.zshrc` if
-present — see the root [README](../../README.md#local-overrides-not-tracked) for why it
-lives outside the repo instead of here.
+## Notes
 
----
-
-# Overview
-
-## `.zshrc`
-
-Main interactive shell configuration.
-
-Loads all modular configs from `conf.d/`.
-
-
----
-
-## `conf.d/`
-
-Configuration files are separated by responsibility.
-
-| File                | Purpose               |
-| ------------------- | --------------------- |
-| `00_env.zsh`        | Environment settings  |
-| `01_history.zsh`    | History behavior      |
-| `10_runtime.zsh`    | Runtime setup         |
-| `20_completion.zsh` | Completion setup      |
-| `30_vim.zsh`        | Vim-style keybindings |
-| `40_prompt.zsh`     | Prompt customization  |
-
-Files are loaded in lexical order.
-
----
-
-# Installation
-
-Handled by the repo's top-level `install.sh` — see the root
-[README](../../README.md#setup). It symlinks this directory to `~/.config/zsh`
-and `.zshenv` (which sets `ZDOTDIR="$HOME/.config/zsh"`) to `~/.zshenv`.
-
----
-
-# Requirements
-
-* zsh 5.x+
-* macOS or Linux
-
----
+- **Why it lives here** — the root `.zshenv` (→ `~/.zshenv`) sets
+  `ZDOTDIR=~/.config/zsh`, so zsh reads `.zshrc` from this directory.
+- **Load order** — the number prefix sets the order. `20_completion.zsh` must come after
+  `10_runtime.zsh`: its nvm completion uses the lazy-load wrappers defined there.
+- **Local override** — `~/.dotfiles-local/zshrc` is sourced last, if present. It sits
+  outside the repo on purpose (see the root
+  [README](../../README.md#local-overrides-not-tracked)).
