@@ -9,6 +9,7 @@
 !/.gitignore
 !/README.md
 !/install.sh
+!/macos.sh
 
 # zsh bootstrap (must live at $HOME, read before ZDOTDIR is set)
 !/.zshenv
